@@ -1,2 +1,2 @@
 # CursoJS
-Curso de Java script
+Curso Grátis de JavaScript e ECMAScript
