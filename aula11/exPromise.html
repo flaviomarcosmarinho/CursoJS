@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        PENDENTE
+        REALIZADA
+        REJEITADO
+        ESTABELECIDA
+        */
+
+        function jaRealizada(){
+            return Promise.resolve('35660069')
+        }
+
+        function jaRejeitada(){
+            return Promise.reject();
+        }
+
+        jaRealizada().then(function(data){
+            console.log('Promise resolvida', data)
+        })
+
+        jaRejeitada().catch(function(){
+            console.log('REJEITADO!')
+        })
+
+        function promiseTrabalhada(){
+            return new Promise(function(resolve, reject){
+                setTimeout(function(){
+                    resolve('Helloword')
+                }, 1000);
+            })
+        }
+
+        promiseTrabalhada().then(function(message){
+            console.log(message)
+        })
+
+        //https://viacep.com.br/ws/35660069/json/
+        function pegaCEP(cep) {
+            return window.fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        }
+
+        function extraiEndereco(data){
+            return data.json()
+        }
+
+        function imprimeEndereco (endereco) {
+            console.log(endereco)
+        }
+
+        function trataErro(erro){
+            console.log('Aconteceu algum erro', erro)
+        }
+
+        //Promises encadeadas
+        jaRealizada()
+        .then(pegaCEP)
+        .then(extraiEndereco)
+        .then(imprimeEndereco)
+        .catch(trataErro)
+        .finally(function(){
+            console.log('Sempre executado')
+        })
+
+        //Promises que não dependem uma da outra
+        Promise.all([
+            jaRealizada(), 
+            pegaCEP('35661165')
+        ]).then(function(promisesResolvidas){ //Promises já resolvidas (O Then só vai ser chamado depois que todas as promises forem executas, e o retorno é um array e cada posição é uma promise)
+            console.log(promisesResolvidas)
+        })
+
+       //Muito parecida com a All, porem assim que a primeira promise executa, já retorna o resultado não esperando que todas terminem, ou tenha alguma rejeitada
+        Promise.race([
+            jaRealizada(), 
+            pegaCEP('35661165')
+        ]).then(function(promisesResolvidas){
+            console.log(promisesResolvidas)
+        })
+    </script>
+</body>
+</html>
